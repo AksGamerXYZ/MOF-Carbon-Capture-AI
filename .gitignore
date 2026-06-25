@@ -1,0 +1,15 @@
+.venv/
+venv/
+
+__pycache__/
+*.pyc
+
+.DS_Store
+
+.env
+
+Data/
+
+PytorchTraining/
+
+Papers/
