@@ -1,11 +1,17 @@
 import json
 import pandas as pd
-import glob
+from pathlib import Path
 
-files = glob.glob("/Users/atishmrk/OneDrive - Fort Bend Independent School District/bulk-dl-mofdb-version-dc8a0295db/*.json")
+# Code/data processing/parse_json.py -> parents[2] is the repo root
+REPO_ROOT = Path(__file__).resolve().parents[2]
+JSON_DIR = REPO_ROOT / "Data" / "bulk-dl-mofdb-version-dc8a0295db"
+OUT_FILE = REPO_ROOT / "Data" / "hmof_co2_dataset.csv"
 
-rows = []
-
+files = sorted(JSON_DIR.glob("*.json"))
+if not files:
+    raise FileNotFoundError(
+        f"No .json files found in {JSON_DIR}. Download the MOFDB data into Data/ first."
+    )
 
 rows = []
 
@@ -23,7 +29,7 @@ for file in files:
                     "MOF": data.get("mofkey"),
                     "name": data.get("name"),
                     "id": data.get("id"),
-                    "filename": file,
+                    "filename": file.name,
                     "surface_area": data.get("surface_area_m2g"),
                     "void_fraction": data.get("void_fraction"),
                     "LCD": data.get("lcd"),
@@ -39,4 +45,4 @@ df = pd.DataFrame(rows)
 
 print(df.shape)
 
-df.to_csv("hmof_co2_dataset.csv", index = False)
+df.to_csv(OUT_FILE, index=False)
